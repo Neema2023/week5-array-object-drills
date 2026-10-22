@@ -193,3 +193,93 @@ const ordersByStatus = orders.reduce((counts, { status }) => ({
 
 console.log("Question 14 - Orders per status:", ordersByStatus);
 console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+
+ // Question 15: Revenue per district from delivered orders
+const revenueByDistrict = orders
+  .filter(({ status }) => status === "delivered")
+  .reduce((revenue, order) => {
+    const district = order.customer.district;
+    revenue[district] = (revenue[district] || 0) + orderTotal(order);
+    return revenue;
+  }, {});
+
+console.log("Question 15 - Revenue by district:", revenueByDistrict);
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+
+ // Question 16: Group orders by date
+const ordersGroupedByDate = Object.groupBy(
+  orders,
+  ({ date }) => date
+);
+
+const dailySummary = Object.entries(ordersGroupedByDate).map(
+  ([date, dateOrders]) => ({
+    date,
+    count: dateOrders.length,
+    revenue: dateOrders.reduce(
+      (sum, order) => sum + orderTotal(order),
+      0
+    )
+  })
+);
+
+console.log("Question 16 - Daily summary:");
+console.dir(dailySummary, { colors: true, depth: null });
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+ // Question 17: Top 3 best-selling items by quantity
+const itemTotals = orders
+  .flatMap(({ items }) => items)
+  .reduce((totals, { name, qty }) => {
+    totals[name] = (totals[name] || 0) + qty;
+    return totals;
+  }, {});
+
+const topThreeItems = Object.entries(itemTotals)
+  .map(([name, qty]) => ({ name, qty }))
+  .toSorted((a, b) => b.qty - a.qty)
+  .slice(0, 3);
+
+console.log("Question 17 - Top 3 best-selling items:", topThreeItems);
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+
+ // Question 18: Each customer's order count and total spent
+const customerSummary = Object.entries(
+  orders.reduce((summary, order) => {
+    const name = order.customer.name;
+
+    if (!summary[name]) {
+      summary[name] = { name, orders: 0, spent: 0 };
+    }
+
+    summary[name].orders += 1;
+    summary[name].spent += orderTotal(order);
+
+    return summary;
+  }, {})
+)
+  .map(([, customer]) => customer)
+  .toSorted((a, b) => b.spent - a.spent);
+
+console.log("Question 18 - Customer summary:");
+console.dir(customerSummary, { colors: true, depth: null });
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+
+ // Question 19: Menu price list using Object.fromEntries
+const menuPrices = Object.fromEntries(
+  orders
+    .flatMap(({ items }) => items)
+    .map(({ name, price }) => [name, price])
+);
+
+console.log("Question 19 - Menu price list:", menuPrices);
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
