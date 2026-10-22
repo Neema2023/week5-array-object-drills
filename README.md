@@ -48,7 +48,3 @@ This repository contains my Week 5 assignments and practice exercises focused on
 ## Learning Objectives
 
 The goal of these assignments is to improve my understanding of JavaScript fundamentals and apply them in practical projects.
-
-## Author
-
-Software Engineering Student
