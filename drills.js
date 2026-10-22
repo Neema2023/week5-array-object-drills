@@ -120,3 +120,76 @@ console.log(
   "Original data unchanged:",
   JSON.stringify(orders) === ORIGINAL
 );
+
+
+
+ // Station 2 - Helper
+const orderTotal = ({ items }) =>
+  items.reduce((sum, { price, qty }) => sum + price * qty, 0);
+
+
+
+ // Question 9: Add total to every order (new objects)
+const ordersWithTotal = orders.map((order) => ({
+  ...order,
+  total: orderTotal(order)
+}));
+
+console.log("Question 9 - Orders with totals:");
+console.dir(ordersWithTotal, { colors: true, depth: null });
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+// Question 10: Total revenue from delivered orders only
+const deliveredRevenue = orders
+  .filter(({ status }) => status === "delivered")
+  .reduce((sum, order) => sum + orderTotal(order), 0);
+
+console.log("Question 10 - Delivered revenue:", deliveredRevenue);
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+// Question 11: Average rating, ignoring null, rounded to 1 decimal
+const ratedOrders = orders.filter(({ rating }) => rating !== null);
+
+const averageRating = Number(
+  (
+    ratedOrders.reduce((sum, { rating }) => sum + rating, 0) /
+    ratedOrders.length
+  ).toFixed(1)
+);
+
+console.log("Question 11 - Average rating:", averageRating);
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+// Question 12: Total quantity of Brochettes sold
+const brochetteQuantity = orders
+  .flatMap(({ items }) => items)
+  .filter(({ name }) => name === "Brochette")
+  .reduce((sum, { qty }) => sum + qty, 0);
+
+console.log("Question 12 - Brochettes sold:", brochetteQuantity);
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+// Question 13: The single most expensive order
+const mostExpensiveOrder = orders
+  .map((order) => ({ ...order, total: orderTotal(order) }))
+  .reduce((highest, order) =>
+    order.total > highest.total ? order : highest
+  );
+
+console.log("Question 13 - Most expensive order:");
+console.dir(mostExpensiveOrder, { colors: true, depth: null });
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+// Question 14: Number of orders per status
+const ordersByStatus = orders.reduce((counts, { status }) => ({
+  ...counts,
+  [status]: (counts[status] || 0) + 1
+}), {});
+
+console.log("Question 14 - Orders per status:", ordersByStatus);
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
