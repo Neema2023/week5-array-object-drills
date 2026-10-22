@@ -283,3 +283,121 @@ const menuPrices = Object.fromEntries(
 
 console.log("Question 19 - Menu price list:", menuPrices);
 console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+
+
+ // Question 20: Mark a pending order as delivered
+function markDelivered(orders, id) {
+  return orders.map((order) =>
+    order.id === id && order.status === "pending"
+      ? { ...order, status: "delivered" }
+      : order
+  );
+}
+
+const deliveredUpdate = markDelivered(orders, 105);
+console.log("Question 20 - Mark delivered:");
+console.dir(deliveredUpdate.find(({ id }) => id === 105), {
+  colors: true,
+  depth: null
+});
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+// Question 21: Rate only delivered orders
+function rateOrder(orders, id, rating) {
+  return orders.map((order) =>
+    order.id === id && order.status === "delivered"
+      ? { ...order, rating }
+      : order
+  );
+}
+
+const ratedUpdate = rateOrder(orders, 101, 5);
+console.log("Question 21 - Rate order:");
+console.dir(ratedUpdate.find(({ id }) => id === 101), {
+  colors: true,
+  depth: null
+});
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+// Question 22: Change the nested customer district
+function changeDistrict(orders, id, district) {
+  return orders.map((order) =>
+    order.id === id
+      ? {
+          ...order,
+          customer: { ...order.customer, district }
+        }
+      : order
+  );
+}
+
+const districtUpdate = changeDistrict(orders, 101, "Kicukiro");
+console.log("Question 22 - Change district:");
+console.dir(districtUpdate.find(({ id }) => id === 101), {
+  colors: true,
+  depth: null
+});
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+// Question 23: Add an item to an order
+function addItem(orders, id, item) {
+  return orders.map((order) =>
+    order.id === id
+      ? { ...order, items: [...order.items, item] }
+      : order
+  );
+}
+
+const itemUpdate = addItem(orders, 101, {
+  name: "Water",
+  price: 500,
+  qty: 1
+});
+console.log("Question 23 - Add item:");
+console.dir(itemUpdate.find(({ id }) => id === 101), {
+  colors: true,
+  depth: null
+});
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+// Question 24: Remove cancelled orders
+function removeCancelled(orders) {
+  return orders.filter(({ status }) => status !== "cancelled");
+}
+
+const activeOrders = removeCancelled(orders);
+console.log(
+  "Question 24 - Remaining order IDs:",
+  activeOrders.map(({ id }) => id)
+);
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+// Question 25: Apply a discount to every item price
+function applyDiscount(orders, percent) {
+  return orders.map((order) => ({
+    ...order,
+    items: order.items.map((item) => ({
+      ...item,
+      price: Math.round(item.price * (1 - percent / 100))
+    }))
+  }));
+}
+
+const discountedOrders = applyDiscount(orders, 10);
+console.log("Question 25 - First discounted order:");
+console.dir(discountedOrders[0], { colors: true, depth: null });
+console.log("Original data unchanged:", JSON.stringify(orders) === ORIGINAL);
+
+
+// Final Station 4 immutability proof
+console.log(
+  "Station 4 final immutability check:",
+  JSON.stringify(orders) === ORIGINAL
+);
